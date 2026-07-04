@@ -15,9 +15,6 @@ html, body {
   color: #fff;
 }
 
-/* sad slow part → black & white; snaps back on the drop */
-html { transition: filter 1.2s ease; }
-html.bw { filter: grayscale(1) brightness(0.75) contrast(1.08); }
 html.shake-big  { animation: shake-big 0.7s ease-out; }
 html.shake-beat { animation: shake-beat 0.22s ease-out; }
 @keyframes shake-big {
@@ -57,6 +54,25 @@ html.shake-beat { animation: shake-beat 0.22s ease-out; }
   background-image: radial-gradient(#fff 1.6px, transparent 1.9px);
   background-size: 4vw 5vh;
   background-position: 2vw 2.5vh;
+}
+
+/* ---------- sad-part black & white overlay ----------
+   A backdrop-filter overlay instead of filtering <html>:
+   filtering the root repaints the whole page every frame
+   and can stall rendering entirely. Slow fade in (.on),
+   fast snap back out (base transition). */
+#bw {
+  position: fixed; inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  backdrop-filter: grayscale(0) brightness(1);
+  -webkit-backdrop-filter: grayscale(0) brightness(1);
+  transition: backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+}
+#bw.on {
+  backdrop-filter: grayscale(1) brightness(0.74) contrast(1.06);
+  -webkit-backdrop-filter: grayscale(1) brightness(0.74) contrast(1.06);
+  transition: backdrop-filter 3s ease, -webkit-backdrop-filter 3s ease;
 }
 
 /* ---------- beat flash ---------- */
@@ -195,9 +211,41 @@ html.shake-beat { animation: shake-beat 0.22s ease-out; }
   color: rgba(255,255,255,0.55);
 }
 
+/* section-jump chips */
+.jump {
+  margin-top: 2.6vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.jump-label {
+  font-family: 'Rye', serif;
+  font-size: clamp(10px, 1.4vh, 14px);
+  letter-spacing: 0.14em;
+  color: #cfd2ff;
+  width: 100%;
+}
+.chip {
+  font-family: 'Anton', Impact, sans-serif;
+  font-size: clamp(12px, 1.8vh, 18px);
+  letter-spacing: 0.1em;
+  color: #FFD700;
+  background: rgba(0,0,0,0.35);
+  border: 2px solid #FFD700;
+  border-radius: 999px;
+  padding: 0.9vh 1.6vw;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.chip:hover { background: #FFD700; color: #10101f; transform: scale(1.07); }
+.chip:focus-visible { outline: 3px dashed #FFD700; outline-offset: 4px; }
+
 .hero.playing .eyebrow,
 .hero.playing .tagline,
 .hero.playing #start,
+.hero.playing .jump,
 .hero.playing .warning { visibility: hidden; }
 .hero.playing .big250,
 .hero.playing .america { opacity: 0.28; transition: opacity 0.4s; }

@@ -22,10 +22,12 @@ Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM** butt
   public-domain / freely-licensed photos pulled from Wikimedia Commons into `img/`.
 - **Eagles and fighter jets** cruise across the screen; jets sometimes fly in a
   three-ship formation with contrails.
-- **The sad slow part** (~101s) drains the screen to black & white and stops the
-  flashing. When the music kicks back in at **146.8s**: color snaps back, the
-  screen shakes, a 16-firework barrage goes off, a jet squadron scrambles, and
-  fireworks launch on every beat until the end.
+- **The sad slow part** (103s) slow-fades the screen to black & white (3s fade)
+  and stops the flashing. When the music kicks back in at **146.8s**: color snaps
+  back instantly, the screen shakes, a 16-firework barrage goes off, a jet
+  squadron scrambles, and fireworks launch on every beat until the end.
+- **Start-menu section jumps** — chips under the big button deploy you straight
+  into Verse 1, List 1, List 2, the Sad Part, or The Drop.
 
 ## How the sync works
 

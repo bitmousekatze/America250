@@ -20,7 +20,7 @@ const BEAT = 60 / BPM;            // 0.70588s
 const BEAT_OFFSET = 0.0;          // time of first downbeat
 const GLOBAL_OFFSET = 0.0;        // shift all cues at once
 
-const SLOW_START = 101.5;         // sad part → black & white
+const SLOW_START = 103.0;         // sad part → black & white starts fading in
 const DROP       = 146.8;         // music kicks back in → FREEDOM
 
 /* ------------------------------------------------------------
@@ -121,6 +121,7 @@ const PHOTOS = [
 /* ---------- elements ---------- */
 const audio       = document.getElementById("anthem");
 const flash       = document.getElementById("flash");
+const bwEl        = document.getElementById("bw");
 const hero        = document.querySelector(".hero");
 const startBtn    = document.getElementById("start");
 const bulletLayer = document.getElementById("bullets");
@@ -148,7 +149,14 @@ const EVENTS = TIMELINE
 let nextEvt = 0;
 
 /* ---------- start ---------- */
-startBtn.addEventListener("click", () => {
+let started = false;
+
+function startShow(at = 0) {
+  if (started) return;
+  started = true;
+  audio.currentTime = at;
+  nextEvt = EVENTS.findIndex(e => e.t >= at);
+  if (nextEvt === -1) nextEvt = EVENTS.length;
   audio.play();
   hero.classList.add("playing");
   if (!reducedMotion) {
@@ -158,7 +166,12 @@ startBtn.addEventListener("click", () => {
     startFlyers();
   }
   requestAnimationFrame(tick);
-});
+}
+
+startBtn.addEventListener("click", () => startShow(0));
+for (const chip of document.querySelectorAll(".chip")) {
+  chip.addEventListener("click", () => startShow(parseFloat(chip.dataset.t)));
+}
 
 /* ---------- main loop ---------- */
 const FLASH_COLORS = ["#B22234", "#ffffff", "#3C3B6E"];
@@ -169,18 +182,18 @@ let dropped = false;
 function tick() {
   const t = audio.currentTime;
 
-  // sad part: black & white, no flashing — let the nation grieve
+  // sad part: fade to black & white, no flashing — let the nation grieve
   if (!inSadPart && t >= SLOW_START + GLOBAL_OFFSET && t < DROP + GLOBAL_OFFSET) {
     inSadPart = true;
-    rootEl.classList.add("bw");
+    bwEl.classList.add("on");
     flash.style.opacity = 0;
   }
 
-  // THE DROP: color back, screen shake, fireworks everywhere
+  // THE DROP: color snaps back, screen shake, fireworks everywhere
   if (!dropped && t >= DROP + GLOBAL_OFFSET) {
     dropped = true;
     inSadPart = false;
-    rootEl.classList.remove("bw");
+    bwEl.classList.remove("on");
     bigShake();
     for (let i = 0; i < 16; i++) setTimeout(launchFirework, i * 140);
     jetSquadron();
@@ -214,7 +227,7 @@ function tick() {
     nextEvt = EVENTS.findIndex(e => e.t > t);
     if (nextEvt === -1) nextEvt = EVENTS.length;
     clearLyric();
-    if (t < SLOW_START + GLOBAL_OFFSET) { inSadPart = false; dropped = false; rootEl.classList.remove("bw"); }
+    if (t < SLOW_START + GLOBAL_OFFSET) { inSadPart = false; dropped = false; bwEl.classList.remove("on"); }
   }
 
   if (hudOpen) hudTime.textContent = t.toFixed(2);
