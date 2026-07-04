@@ -265,6 +265,10 @@ function startShow(at = 0, whichAct = 1) {
     if (whichAct === 1) startPhotos();
   }
   if (whichAct === 1) {
+    // mobile autoplay policy: each <audio> needs its own user-gesture
+    // unlock, so prime act 2 on this same tap (instant play+pause is
+    // inaudible under the anthem starting)
+    audio2.play().then(() => { audio2.pause(); audio2.currentTime = 0; }).catch(() => {});
     audio.currentTime = at;
     nextEvt = EVENTS.findIndex(e => e.t >= at);
     if (nextEvt === -1) nextEvt = EVENTS.length;
@@ -520,7 +524,15 @@ function enterActTwo() {
   document.body.classList.add("act2");
   if (audio2.error) { grandFinale(); return; }   // no Free Bird file → wrap it up
   audio2.currentTime = 0;
-  audio2.play().catch(() => grandFinale());
+  // if a browser still refuses without a fresh gesture, ask for one tap
+  audio2.play().catch(() => {
+    const b = document.createElement("button");
+    b.id = "resume";
+    b.type = "button";
+    b.textContent = "🕊️ TAP FOR FREE BIRD 🕊️";
+    b.addEventListener("click", () => { audio2.play(); b.remove(); });
+    document.body.appendChild(b);
+  });
 }
 
 /* ---------- act 2 montage rendering ---------- */
@@ -545,6 +557,8 @@ function showSlide(idx, slideDur) {
 // the end of the whole show
 function grandFinale() {
   flash.style.opacity = 0;
+  montageEl.style.transition = "opacity 1.2s";
+  montageEl.style.opacity = "0";               // don't fight the replay button
   chorusPop("HERE'S TO 250 MORE 🦅", 3.5, true);
   for (let i = 0; i < 14; i++) setTimeout(launchFirework, i * 220);
   jetSquadron();
