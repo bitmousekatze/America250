@@ -524,6 +524,7 @@ function enterActTwo() {
   document.body.classList.add("act2");
   if (audio2.error) { grandFinale(); return; }   // no Free Bird file → wrap it up
   audio2.currentTime = 0;
+  if (document.hidden) { hiddenPaused = audio2; return; }  // left mid-transition → start on return
   // if a browser still refuses without a fresh gesture, ask for one tap
   audio2.play().catch(() => {
     const b = document.createElement("button");
@@ -631,6 +632,26 @@ function startFireworks() {
     requestAnimationFrame(loop);
   })();
 }
+
+/* ---------- pause when the site is backgrounded ---------- */
+let hiddenPaused = null;
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    const a = act === 1 ? audio : audio2;
+    if (!a.paused && !a.ended) {
+      a.pause();
+      hiddenPaused = a;
+    }
+  } else if (hiddenPaused) {
+    hiddenPaused.play().catch(() => {});   // element is already unlocked
+    hiddenPaused = null;
+  }
+});
+// iOS backup: pagehide fires in cases visibilitychange can miss
+addEventListener("pagehide", () => {
+  const a = act === 1 ? audio : audio2;
+  if (!a.paused && !a.ended) { a.pause(); hiddenPaused = a; }
+});
 
 /* ---------- calibration HUD (press C) — drives whichever act is playing ---------- */
 let hudOpen = false;
