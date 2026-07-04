@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMERICA 250 — F*** YEAH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Anton&family=Rye&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- beat flash overlay -->
+  <div id="flash"></div>
+
+  <!-- stars & stripes backdrop -->
+  <div class="backdrop">
+    <div class="stripes"></div>
+    <div class="canton"></div>
+  </div>
+
+  <!-- raining bullets layer -->
+  <div id="bullets"></div>
+
+  <!-- fireworks layer -->
+  <canvas id="fireworks"></canvas>
+
+  <!-- flag marquees -->
+  <div class="flagline flagline-top" aria-hidden="true"></div>
+  <div class="flagline flagline-bottom" aria-hidden="true"></div>
+
+  <!-- hero -->
+  <main class="hero">
+    <p class="eyebrow">EST. JULY 4, 1776 &nbsp;★&nbsp; STILL THE LOUDEST NATION ON EARTH</p>
+    <h1 class="big250">250</h1>
+    <h2 class="america">AMERICA</h2>
+    <p class="tagline">TWO&nbsp;HUNDRED&nbsp;AND&nbsp;FIFTY YEARS&nbsp;OF&nbsp;FREEDOM<span class="tm">™</span></p>
+
+    <button id="start" type="button">
+      <span class="eagle">🦅</span> PRESS FOR FREEDOM <span class="eagle">🦅</span>
+    </button>
+    <p class="warning">⚠ contains flashing lights, raining ammunition, and the truth</p>
+  </main>
+
+  <!-- item stamp animation target -->
+  <div id="stamp-zone" aria-live="polite"></div>
+
+  <!-- big FUCK YEAH chorus text -->
+  <div id="chorus-zone"></div>
+
+  <!-- calibration HUD (press C) -->
+  <div id="hud" hidden>
+    <div class="hud-time">0.00</div>
+    <div class="hud-help">L = log time &nbsp;·&nbsp; ←/→ = seek 2s &nbsp;·&nbsp; SPACE = pause &nbsp;·&nbsp; C = close</div>
+    <div class="hud-log"></div>
+  </div>
+
+  <audio id="anthem" src="america-fk-yeah.mp3" preload="auto"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
