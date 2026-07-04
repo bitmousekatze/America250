@@ -10,30 +10,40 @@ a Great American Thing, it gets stamped onto your screen like a county-fair priz
 Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM** button.
 (Browsers block autoplaying audio, so freedom requires one click. Ironic.)
 
-## Tuning the timing
+## What's on screen
 
-All timing lives at the top of `app.js`:
+- **List 1** (McDonald's → Slavery) gets rubber-stamp cards.
+- **List 2** (Starbucks → Books) gets giant tricolor lyric call-outs — no stamp
+  animation. (Set `LIST2_AS_STAMPS = true` in `app.js` to bring the cards back.)
+- **Lyrics** cycle at the bottom of the screen, every word colored
+  white → red → blue in turn. The verse lines ship **blank on purpose** — the full
+  copyrighted lyrics shouldn't live in the repo. Each blank slot in the `LYRICS`
+  array in `app.js` has a comment saying which line goes there; paste them in from
+  your favorite lyrics site.
 
-| Constant | What it is |
-|---|---|
-| `BPM` / `BEAT_OFFSET` | Drives the tricolor flash. Nudge `BEAT_OFFSET` if the flash is early/late. |
-| `LIST1_START` | When he shouts "McDonald's!" — set to **47.0s**. |
-| `LIST2_START` | When he shouts "Starbucks!" — currently an **estimate (110s)**. Calibrate it! |
+## Syncing the timing (the easy way)
 
-Items are spaced in beats after their list start, so shifting a `*_START` moves the
-whole list at once.
+While the song plays, just tap:
 
-### Calibration mode
+- **M** — the instant he shouts *"McDonald's!"* → list 1 snaps to that moment
+- **S** — the instant he shouts *"Starbucks!"* → list 2 (and the outro chant) snap to that moment
 
-While the song plays:
+Both are saved in your browser (localStorage), so you only ever do it once.
+`LIST2_START` starts out as an estimate (110s), so give **S** one tap on your
+first playthrough.
+
+## Fine-tuning (the nerd way)
+
+All timing lives at the top of `app.js`: `BPM` / `BEAT_OFFSET` drive the tricolor
+flash; items and lyric lines sit on the 85 BPM beat grid. While the song plays:
 
 - **C** — toggle the timecode HUD
 - **L** — log the current timestamp (on screen + console)
 - **← / →** — seek 2 seconds
 - **Space** — pause/play
 
-Play the song, press **L** exactly when he says "Starbucks", and paste that number
-into `LIST2_START`.
+Log timestamps with **L** and paste them into the `LYRICS` array to tighten up
+any line.
 
 ## Warning
 

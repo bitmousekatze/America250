@@ -264,6 +264,64 @@ html, body {
   100% { transform: scale(1.4); opacity: 0; }
 }
 
+/* ---------- cycling lyrics ---------- */
+#lyrics {
+  position: fixed;
+  left: 0; right: 0;
+  bottom: 10vh;
+  z-index: 8;
+  text-align: center;
+  pointer-events: none;
+  font-family: 'Anton', Impact, sans-serif;
+  font-size: clamp(26px, 6.5vh, 68px);
+  letter-spacing: 0.05em;
+  line-height: 1.15;
+  padding: 0 4vw;
+}
+#lyrics.item-line {
+  font-size: clamp(38px, 10vh, 110px);
+  bottom: 38vh; /* item call-outs jump to center stage */
+}
+.lw {
+  display: inline-block;
+  margin: 0 0.17em;
+  opacity: 0;
+  animation: lyric-pop 0.24s cubic-bezier(0.2, 1.8, 0.4, 1) forwards;
+  text-shadow: 0 4px 0 rgba(0,0,0,0.55), 0 0 26px rgba(0,0,0,0.65);
+}
+.lw.c0 { color: #ffffff; }
+.lw.c1 { color: #ff4655; }
+.lw.c2 { color: #7d9bff; }
+@keyframes lyric-pop {
+  from { transform: translateY(34px) scale(0.6) rotate(-3deg); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+/* ---------- tap-sync toast ---------- */
+#toast {
+  position: fixed;
+  top: 16vh; left: 50%;
+  transform: translateX(-50%);
+  z-index: 21;
+  background: rgba(0,0,0,0.85);
+  border: 3px solid #FFD700;
+  border-radius: 10px;
+  padding: 12px 26px;
+  font-family: 'Anton', Impact, sans-serif;
+  font-size: clamp(16px, 2.6vh, 26px);
+  letter-spacing: 0.08em;
+  color: #FFD700;
+  animation: toast-fade 2.2s ease forwards;
+  pointer-events: none;
+  white-space: nowrap;
+}
+@keyframes toast-fade {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  12%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 /* ---------- calibration HUD ---------- */
 #hud {
   position: fixed;
