@@ -211,6 +211,12 @@ for (const chip of document.querySelectorAll(".chip")) {
   chip.addEventListener("click", () => startShow(parseFloat(chip.dataset.t)));
 }
 
+// the repo ships without the (copyrighted) anthem — tell visitors what to do
+audio.addEventListener("error", () => {
+  document.querySelector(".warning").textContent =
+    "⚠ ANTHEM MISSING — put your own copy of the song next to index.html, named america-fk-yeah.mp3";
+});
+
 /* ---------- main loop ---------- */
 const FLASH_COLORS = ["#B22234", "#ffffff", "#3C3B6E"];
 let lastBeat = -1;

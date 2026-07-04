@@ -7,8 +7,14 @@ a Great American Thing, it gets stamped onto your screen like a county-fair priz
 
 ## Run it
 
-Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM** button.
-(Browsers block autoplaying audio, so freedom requires one click. Ironic.)
+1. **Bring your own anthem.** The song is copyrighted, so it's not in this repo —
+   get your own copy of *America, F*** Yeah* (Team America: World Police,
+   Trey Parker / Paramount) and drop it next to `index.html` named exactly
+   `america-fk-yeah.mp3`. All the sync timestamps were extracted from the
+   2:43 soundtrack version — other rips may need `GLOBAL_OFFSET` nudged.
+2. Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM**
+   button. (Browsers block autoplaying audio, so freedom requires one click.
+   Ironic.)
 
 ## What's on screen
 
