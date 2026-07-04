@@ -6,13 +6,7 @@ and blue locked to the 85 BPM of *America, F*** Yeah*, and every time the man li
 a Great American Thing, it gets stamped onto your screen like a county-fair prize hog.
 
 ## Run it
-
-1. **Bring your own anthem.** The song is copyrighted, so it's not in this repo —
-   get your own copy of *America, F*** Yeah* (Team America: World Police,
-   Trey Parker / Paramount) and drop it next to `index.html` named exactly
-   `america-fk-yeah.mp3`. All the sync timestamps were extracted from the
-   2:43 soundtrack version — other rips may need `GLOBAL_OFFSET` nudged.
-2. Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM**
+   Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM**
    button. (Browsers block autoplaying audio, so freedom requires one click.
    Ironic.)
 
@@ -67,21 +61,6 @@ and the slow finale chorus runs from ~113s to the end.
 If you ever swap in a different rip of the song, nudge `GLOBAL_OFFSET` at the top
 of `app.js` (shifts every cue at once) or re-transcribe:
 
-```
-ffmpeg -i song.mp3 -ar 16000 -ac 1 song.wav
-whisper-cli -m ggml-small.en.bin -f song.wav --max-len 1 --split-on-word -oj
-```
-
-## Fine-tuning
-
-While the song plays:
-
-- **C** — toggle the timecode HUD
-- **L** — log the current timestamp (on screen + console)
-- **← / →** — seek 2 seconds
-- **Space** — pause/play
-
-Log timestamps with **L** and tweak any line in the `TIMELINE` array.
 
 ## Warning
 
