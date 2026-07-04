@@ -405,6 +405,31 @@ html.shake-beat { animation: shake-beat 0.22s ease-out; }
   to   { transform: none; opacity: 1; }
 }
 
+/* ---------- replay button ---------- */
+#replay {
+  position: fixed;
+  top: 62%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 22;
+  font-family: 'Anton', Impact, sans-serif;
+  font-size: clamp(20px, 3.4vh, 36px);
+  letter-spacing: 0.12em;
+  color: #10101f;
+  background: linear-gradient(180deg, #ffe9a0, #FFD700 55%, #d4a900);
+  border: 4px solid #fff;
+  border-radius: 14px;
+  padding: 2vh 4vw;
+  cursor: pointer;
+  box-shadow: 0 0 0 4px #B22234, 0 0 34px rgba(255,215,0,0.5), 0 10px 0 rgba(0,0,0,0.4);
+  animation: replay-in 0.5s cubic-bezier(0.2, 1.8, 0.4, 1) backwards, throb 0.706s ease-in-out 0.5s infinite;
+}
+#replay:hover { transform: translate(-50%, -50%) scale(1.06); }
+#replay:focus-visible { outline: 4px dashed #FFD700; outline-offset: 6px; }
+@keyframes replay-in {
+  from { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+  to   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
 /* ---------- calibration HUD ---------- */
 #hud {
   position: fixed;

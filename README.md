@@ -17,9 +17,12 @@ Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM** butt
 - **Both item lists** (McDonald's → Slavery, Starbucks → Books) appear as giant
   center-stage tricolor call-outs with emoji — and every crowd **"FUCK YEAH!"**
   response slams in below them in gold, at its exact transcribed timestamp.
-- **Satire stock photos** pop up as tilted polaroids with deadpan captions
-  ("HEALTH FOOD", "THE MOON (OURS)", "AMERICA'S FIRST UBER"…). All images are
+- **49 satire stock photos** pop up as tilted polaroids with deadpan captions
+  ("HEALTH FOOD", "POTHOLE" [the Grand Canyon], "NEIGHBORHOOD WATCH" [a tank],
+  "THE ORIGINAL TWEET" [the Declaration of Independence]…). All images are
   public-domain / freely-licensed photos pulled from Wikimedia Commons into `img/`.
+- **Replay button** appears after the show ends, in case freedom wasn't enough
+  the first time.
 - **Eagles and fighter jets** cruise across the screen; jets sometimes fly in a
   three-ship formation with contrails.
 - **The sad slow part** (103s) slow-fades the screen to black & white (3s fade)

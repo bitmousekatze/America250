@@ -103,19 +103,57 @@ const TIMELINE = [
   { t: 156.20, d: 4.5, text: "FUCK YEAH!" },
 ];
 
-/* ---------- satire stock photos ---------- */
+/* ---------- satire stock photos (all Wikimedia Commons) ---------- */
 const PHOTOS = [
-  ["img/eagle.jpg",     "ACTUAL FOOTAGE OF FREEDOM"],
-  ["img/unclesam.jpg",  "HR DEPARTMENT"],
-  ["img/delaware.jpg",  "AMERICA'S FIRST UBER"],
-  ["img/moon.jpg",      "THE MOON (OURS)"],
-  ["img/burger.jpg",    "HEALTH FOOD"],
-  ["img/hotdog.jpg",    "VEGETABLE"],
-  ["img/fireworks.jpg", "QUIET NIGHT IN"],
-  ["img/rushmore.jpg",  "THE ORIGINAL BOY BAND"],
-  ["img/liberty.jpg",   "FRENCH IMPORT (WE'RE KEEPING HER)"],
-  ["img/vegas.jpg",     "RETIREMENT PLAN"],
-  ["img/jet.jpg",       "AIR CONDITIONING"],
+  ["img/eagle.jpg",         "ACTUAL FOOTAGE OF FREEDOM"],
+  ["img/unclesam.jpg",      "HR DEPARTMENT"],
+  ["img/delaware.jpg",      "AMERICA'S FIRST UBER"],
+  ["img/moon.jpg",          "THE MOON (OURS)"],
+  ["img/burger.jpg",        "HEALTH FOOD"],
+  ["img/hotdog.jpg",        "VEGETABLE"],
+  ["img/fireworks.jpg",     "QUIET NIGHT IN"],
+  ["img/rushmore.jpg",      "THE ORIGINAL BOY BAND"],
+  ["img/liberty.jpg",       "FRENCH IMPORT (WE'RE KEEPING HER)"],
+  ["img/vegas.jpg",         "RETIREMENT PLAN"],
+  ["img/jet.jpg",           "AIR CONDITIONING"],
+  ["img/monstertruck2.jpg", "SENSIBLE COMMUTER CAR"],
+  ["img/nascar2.jpg",       "LEFT TURNS ONLY"],
+  ["img/tank.jpg",          "NEIGHBORHOOD WATCH"],
+  ["img/carrier.jpg",       "POOL FLOATIE"],
+  ["img/stealth.jpg",       "YOU CAN'T SEE THIS"],
+  ["img/blueangels.jpg",    "CARPOOL LANE"],
+  ["img/saturnv.jpg",       "FIREWORK (LARGE)"],
+  ["img/astronaut.jpg",     "REMOTE WORKER"],
+  ["img/whitehouse.jpg",    "PUBLIC HOUSING"],
+  ["img/capitol.jpg",       "THE GROUP CHAT"],
+  ["img/goldengate.jpg",    "BRIDGE (FREEDOM EDITION)"],
+  ["img/grandcanyon.jpg",   "POTHOLE"],
+  ["img/route66.jpg",       "THE COMMUTE"],
+  ["img/hollywood.jpg",     "LOCAL SIGNAGE"],
+  ["img/timessquare.jpg",   "QUIET STREET"],
+  ["img/niagara.jpg",       "LEAKY FAUCET"],
+  ["img/oldfaithful.jpg",   "SPRINKLER SYSTEM"],
+  ["img/bison.jpg",         "LAWN ORNAMENTS"],
+  ["img/turkey.jpg",        "ALMOST THE NATIONAL BIRD (TRUE STORY)"],
+  ["img/retriever.jpg",     "GOOD BOY (VERIFIED)"],
+  ["img/applepie.jpg",      "THE FOOD PYRAMID"],
+  ["img/ribs.jpg",          "SALAD"],
+  ["img/corndog.jpg",       "STATE FAIR CAVIAR"],
+  ["img/deepdish.jpg",      "PIZZA (LEGALLY DISTINCT)"],
+  ["img/donuts.jpg",        "BREAKFAST OF CHAMPIONS"],
+  ["img/pancakes.jpg",      "LIGHT BREAKFAST"],
+  ["img/pbj.jpg",           "NATIONAL DISH"],
+  ["img/cheeseburger.jpg",  "DOCTOR RECOMMENDED"],
+  ["img/pickup.jpg",        "COMPACT CAR"],
+  ["img/harley.jpg",        "LIBRARY VOICE"],
+  ["img/suburbs.jpg",       "CHARACTER & VARIETY"],
+  ["img/elvis.jpg",         "THE KING (ONLY MONARCHY WE ACCEPT)"],
+  ["img/washington.jpg",    "FOUNDING INFLUENCER"],
+  ["img/lincoln.jpg",       "HONEST ABE (NO CAP)"],
+  ["img/teddy.jpg",         "FIRST GYM BRO"],
+  ["img/declaration.jpg",   "THE ORIGINAL TWEET"],
+  ["img/ballpark.jpg",      "CHURCH"],
+  ["img/thanksgiving.jpg",  "PORTION CONTROL"],
 ];
 
 /* ---------- elements ---------- */
@@ -291,7 +329,7 @@ let photoBag = [];
 function startPhotos() {
   setInterval(() => {
     if (audio.paused || audio.ended) return;
-    if (photoLayer.childElementCount >= 4) return;
+    if (photoLayer.childElementCount >= 5) return;
     if (photoBag.length === 0) photoBag = [...PHOTOS].sort(() => Math.random() - 0.5);
     const [src, caption] = photoBag.pop();
     const el = document.createElement("div");
@@ -303,7 +341,7 @@ function startPhotos() {
     photoLayer.appendChild(el);
     setTimeout(() => el.classList.add("out"), 2900);
     setTimeout(() => el.remove(), 3250);
-  }, 2600);
+  }, 2100);
 }
 
 /* ---------- eagles & fighter jets ---------- */
@@ -357,7 +395,9 @@ function finale() {
   chorusZone.appendChild(el);
   flash.style.opacity = 0;
   for (let i = 0; i < 12; i++) setTimeout(launchFirework, i * 250);
+  setTimeout(() => { document.getElementById("replay").hidden = false; }, 2800);
 }
+document.getElementById("replay").addEventListener("click", () => location.reload());
 
 /* ---------- bullet rain ---------- */
 let bulletTimer = null;
