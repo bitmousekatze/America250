@@ -235,6 +235,7 @@ const hudLog      = hud.querySelector(".hud-log");
 const rootEl      = document.documentElement;
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isMobile = window.matchMedia("(max-width: 700px)").matches;
 
 /* ---------- flag marquees ---------- */
 for (const line of document.querySelectorAll(".flagline")) {
@@ -428,14 +429,15 @@ let photoTimer = null;
 function startPhotos() {
   photoTimer = setInterval(() => {
     if (audio.paused || audio.ended) return;
-    if (photoLayer.childElementCount >= 5) return;
+    if (photoLayer.childElementCount >= (isMobile ? 3 : 5)) return;
     if (photoBag.length === 0) photoBag = [...PHOTOS].sort(() => Math.random() - 0.5);
     const [src, caption] = photoBag.pop();
     const el = document.createElement("div");
     el.className = "polaroid";
     el.style.setProperty("--tilt", (Math.random() * 28 - 14).toFixed(1) + "deg");
-    el.style.left = (3 + Math.random() * 65) + "vw";
-    el.style.top = (6 + Math.random() * 52) + "vh";
+    // narrower spawn band on phones so polaroids never hang off the edge
+    el.style.left = (isMobile ? 2 + Math.random() * 50 : 3 + Math.random() * 65) + "vw";
+    el.style.top = (isMobile ? 8 + Math.random() * 46 : 6 + Math.random() * 52) + "vh";
     el.innerHTML = `<img src="${src}" alt=""><div class="caption">${caption}</div>`;
     photoLayer.appendChild(el);
     setTimeout(() => el.classList.add("out"), 2900);
@@ -554,7 +556,7 @@ document.getElementById("replay").addEventListener("click", () => location.reloa
 let bulletTimer = null;
 function startBullets() {
   bulletTimer = setInterval(() => {
-    if (bulletLayer.childElementCount > 90) return; // cap
+    if (bulletLayer.childElementCount > (isMobile ? 35 : 90)) return; // cap
     const b = document.createElement("span");
     b.className = "bullet" + (Math.random() < 0.12 ? " tracer" : "");
     b.style.left = Math.random() * 100 + "vw";
@@ -562,7 +564,7 @@ function startBullets() {
     b.style.animationDelay = (Math.random() * 0.3).toFixed(2) + "s";
     b.addEventListener("animationend", () => b.remove());
     bulletLayer.appendChild(b);
-  }, 90);
+  }, isMobile ? 150 : 90);
 }
 
 /* ---------- fireworks (canvas particles) ---------- */

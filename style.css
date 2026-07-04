@@ -534,3 +534,92 @@ body.act2 .hero .america { opacity: 0.1; }
   #flash, .flagline, .eagle, #start, html.shake-big, html.shake-beat { animation: none !important; }
   .bullet, .flyer { display: none; }
 }
+
+/* ============================================================
+   MOBILE (max-width: 700px) — same show, phone-sized.
+   Desktop sizes are vh-driven; on a tall narrow screen that
+   overflows sideways, so everything rescales against vw and
+   long text is allowed to wrap.
+   ============================================================ */
+@media (max-width: 700px) {
+  .hero { height: 100dvh; padding: 0 12px; }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    padding: 0 8vw;
+    line-height: 1.6;
+  }
+  .big250 {
+    font-size: clamp(88px, 36vw, 160px);
+    text-shadow:
+      0 0 16px rgba(255,215,0,0.35),
+      4px 4px 0 #B22234,
+      8px 8px 0 #3C3B6E;
+  }
+  .america {
+    font-size: clamp(30px, 11.5vw, 52px);
+    letter-spacing: 0.18em;
+    margin-left: 0.18em;
+    -webkit-text-stroke: 1.5px #fff;
+  }
+  .tagline { font-size: 11px; letter-spacing: 0.12em; padding: 0 6vw; }
+
+  #start {
+    font-size: clamp(17px, 5.5vw, 24px);
+    padding: 14px 22px;
+    border-width: 3px;
+    margin-top: 3.5vh;
+  }
+  .jump { gap: 7px; margin-top: 2vh; padding: 0 4vw; }
+  .jump-label { font-size: 10px; }
+  .chip { font-size: clamp(11px, 3.4vw, 14px); padding: 7px 13px; border-width: 1.5px; }
+  .warning { font-size: 9px; padding: 0 8vw; line-height: 1.6; }
+
+  .flagline { font-size: 20px; letter-spacing: 0.3em; }
+
+  /* lyrics + call-outs: vw-scaled, wrap instead of overflowing */
+  #lyrics { font-size: clamp(19px, 6.5vw, 30px); bottom: 12vh; padding: 0 3vw; }
+  #lyrics.item-line { font-size: clamp(26px, 9.5vw, 44px); bottom: 40vh; }
+  #fy {
+    font-size: clamp(30px, 12vw, 52px);
+    bottom: 20vh;
+    -webkit-text-stroke: 2px #B22234;
+    padding: 0 4vw;
+  }
+
+  /* chorus text was nowrap — let it wrap and shrink */
+  .chorus {
+    white-space: normal;
+    font-size: clamp(40px, 17vw, 78px);
+    line-height: 1.05;
+    padding: 0 5vw;
+    text-align: center;
+    -webkit-text-stroke: 2.5px #B22234;
+  }
+  .chorus.chorus-small { font-size: clamp(24px, 9.5vw, 40px); }
+
+  /* polaroids: smaller and never off the right edge */
+  .polaroid { padding: 7px 7px 5px; box-shadow: 0 5px 18px rgba(0,0,0,0.55); }
+  .polaroid img { width: clamp(105px, 36vw, 150px); height: clamp(80px, 27vw, 115px); }
+  .polaroid .caption { font-size: 8.5px; padding-top: 5px; }
+
+  /* act 2 montage */
+  .slide { gap: 1vh; max-width: 94vw; }
+  .slide img { max-height: 42vh; max-width: 88vw; border-width: 5px; }
+  .m-year { font-size: clamp(18px, 6.5vw, 30px); }
+  .m-title { font-size: clamp(17px, 6vw, 28px); padding: 0 3vw; line-height: 1.15; }
+  .slide.title-card .m-year { font-size: clamp(22px, 8vw, 38px); }
+  .slide.title-card .m-title { font-size: clamp(24px, 9vw, 44px); }
+
+  #kilo { font-size: clamp(38px, 14vw, 72px); -webkit-text-stroke: 2px #fff; width: 96vw; }
+
+  .flyer.eagle { font-size: clamp(26px, 9vw, 42px); }
+  .flyer.jet svg { width: clamp(52px, 16vw, 80px); }
+  .flyer.jet .contrail { width: 22vw; height: 3px; }
+
+  #replay { font-size: clamp(16px, 5.5vw, 24px); padding: 14px 22px; border-width: 3px; top: 66%; }
+
+  #hud { top: 46px; right: 8px; padding: 8px 10px; max-width: 220px; }
+  .hud-time { font-size: 28px; }
+}
