@@ -371,6 +371,7 @@ html.shake-beat { animation: shake-beat 0.22s ease-out; }
   70%  { transform: scale(1); opacity: 1; }
   100% { transform: scale(1.4); opacity: 0; }
 }
+.chorus.chorus-small { font-size: clamp(30px, 7.5vw, 110px); } /* long lines fit on screen */
 
 /* ---------- cycling lyrics ---------- */
 #lyrics {
@@ -403,6 +404,88 @@ html.shake-beat { animation: shake-beat 0.22s ease-out; }
 @keyframes lyric-pop {
   from { transform: translateY(34px) scale(0.6) rotate(-3deg); opacity: 0; }
   to   { transform: none; opacity: 1; }
+}
+
+/* ---------- act 2: the 250-years montage ---------- */
+body.act2 .backdrop { opacity: 0.08; }
+body.act2 .hero .big250,
+body.act2 .hero .america { opacity: 0.1; }
+
+#montage {
+  position: fixed; inset: 0;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.slide {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6vh;
+  max-width: 88vw;
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.16s ease-out;
+  animation: slide-punch 0.22s cubic-bezier(0.2, 1.6, 0.4, 1) backwards;
+}
+.slide.out { opacity: 0; }
+@keyframes slide-punch {
+  from { transform: scale(1.14); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+.slide img {
+  max-height: 56vh;
+  max-width: 82vw;
+  border: 8px solid #fff;
+  box-shadow: 0 0 90px rgba(0,0,0,0.85), 0 0 44px rgba(255,215,0,0.22);
+  animation: kenburns 5s ease-out forwards;
+}
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.045); } }
+.m-year {
+  font-family: 'Bungee Shade', Impact, sans-serif;
+  font-size: clamp(26px, 5.5vh, 60px);
+  color: #FFD700;
+  text-shadow: 0 4px 0 rgba(0,0,0,0.55);
+}
+.m-title {
+  font-family: 'Anton', Impact, sans-serif;
+  font-size: clamp(24px, 5vh, 58px);
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-shadow: 0 4px 0 rgba(0,0,0,0.55), 0 0 30px rgba(0,0,0,0.7);
+}
+.slide.title-card .m-year { font-size: clamp(30px, 7vh, 76px); }
+.slide.title-card .m-title { font-size: clamp(30px, 7.5vh, 84px); max-width: 80vw; }
+
+/* ---------- the imperial rage interlude ---------- */
+#kilo {
+  position: fixed;
+  top: 50%; left: 50%;
+  z-index: 13;
+  pointer-events: none;
+  text-align: center;
+  font-family: 'Anton', Impact, sans-serif;
+  font-size: clamp(44px, 11vw, 150px);
+  line-height: 1.02;
+  letter-spacing: 0.02em;
+  color: #ff2222;
+  -webkit-text-stroke: 3px #fff;
+  text-shadow: 0 0 40px rgba(255,0,0,0.8), 8px 8px 0 rgba(0,0,0,0.7);
+  animation: kilo-rage 0.09s linear infinite, kilo-grow 2s ease-in forwards;
+}
+@keyframes kilo-rage {
+  0%   { transform: translate(-50%, -50%) rotate(-2.5deg) translate(-6px, 3px); }
+  25%  { transform: translate(-50%, -50%) rotate(1.8deg)  translate(5px, -5px); }
+  50%  { transform: translate(-50%, -50%) rotate(-1.4deg) translate(-4px, -3px); }
+  75%  { transform: translate(-50%, -50%) rotate(2.2deg)  translate(6px, 4px); }
+  100% { transform: translate(-50%, -50%) rotate(-2deg)   translate(-5px, 2px); }
+}
+@keyframes kilo-grow {
+  from { font-size: clamp(44px, 11vw, 150px); }
+  to   { font-size: clamp(54px, 14vw, 190px); }
 }
 
 /* ---------- replay button ---------- */

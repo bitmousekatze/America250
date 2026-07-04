@@ -29,14 +29,32 @@ a Great American Thing, it gets stamped onto your screen like a county-fair priz
   public-domain / freely-licensed photos pulled from Wikimedia Commons into `img/`.
 - **Replay button** appears after the show ends, in case freedom wasn't enough
   the first time.
+
+## Act 2: Free Bird
+
+When the anthem ends ("HAPPY 250TH 🎂"), the show rolls straight into
+**MOONLGHT — Free Bird** (supply your own copy as `moonlght-freebird.mp3`,
+also gitignored). The flash re-locks to **142 BPM**, the satire polaroids stop,
+and a **"WHAT HAS AMERICA DONE?"** montage takes over: 33 slides of the real
+best-of — 1776 Declaration → Wright Flyer → D-Day → Jackie Robinson → MLK →
+the Moon → ARPANET → the Lunar Rover → Voyager's Golden Record → the Shuttle →
+"Tear Down This Wall" → Hubble → the ISS → Mars. All images are public-domain
+(NASA / National Archives / Library of Congress via Wikimedia Commons).
+
+Beat-matched cuts, tuned to the track's measured loudness curve:
+- **6 beats per slide** during the intro
+- bass drops at **19.9s** → **1.5 beats per slide** (a cut every 0.63s), deck loops
+- **73–75s**: the music cuts out and giant shaking red subtitles scream
+  **"THE FUCK IS A KILOMETORRRRR"** until the bass slams back (shake + jets + fireworks)
+
+There's a 🕊️ FREE BIRD chip on the start menu to jump straight to it.
 - **Eagles and fighter jets** cruise across the screen; jets sometimes fly in a
   three-ship formation with contrails.
-- **The sad slow part** (103s) slow-fades the screen to black & white (3s fade)
-  and stops the flashing. When the music kicks back in at **146.8s**: color snaps
-  back instantly, the screen shakes, a 16-firework barrage goes off, a jet
-  squadron scrambles, and fireworks launch on every beat until the end.
+- **The sad slow ending** (103s) slow-fades the screen to black & white (3s fade)
+  and stops the flashing — and it *stays* gray through the final chorus. Color
+  comes roaring back when Free Bird begins.
 - **Start-menu section jumps** — chips under the big button deploy you straight
-  into Verse 1, List 1, List 2, the Sad Part, or The Drop.
+  into Verse 1, List 1, List 2, the Sad Part, or 🕊️ Free Bird.
 
 ## How the sync works
 

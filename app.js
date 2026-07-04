@@ -18,10 +18,21 @@
 const BPM = 85;
 const BEAT = 60 / BPM;            // 0.70588s
 const BEAT_OFFSET = 0.0;          // time of first downbeat
-const GLOBAL_OFFSET = 0.0;        // shift all cues at once
+const GLOBAL_OFFSET = 0.0;        // shift all act-1 cues at once
 
-const SLOW_START = 103.0;         // sad part → black & white starts fading in
-const DROP       = 146.8;         // music kicks back in → FREEDOM
+// act 2: MOONLGHT — Free Bird (the most American solo in history)
+const BPM2 = 142;
+const BEAT2 = 60 / BPM2;          // 0.42254s
+const BEAT_OFFSET2 = 0.0;
+const DROP2 = 19.9;               // bass drop (measured from the loudness curve)
+const REDROP2 = 75.0;             // the cut-out at 73s slams back here
+const KILO_START = 72.3;          // "THE FUCK IS A KILOMETORRRRR"
+const KILO_END = 75.0;            // ...right until the bass slams back
+const PRE_BEATS = 6;              // slide cadence before the drop
+const POST_BEATS = 1.5;           // slide cadence after the drop (a cut every 0.63s)
+
+const SLOW_START = 103.0;         // sad part → black & white fades in and STAYS
+                                  // (color comes back when Free Bird begins)
 
 /* ------------------------------------------------------------
    TIMELINE — { t, d, text } lyric lines.
@@ -96,7 +107,7 @@ const TIMELINE = [
   { t: 135.60, d: 4.9, text: "Terrorists, your game is through" },
   { t: 140.92, d: 5.5, text: "'Cause now you have to answer to…" },
 
-  // ---- THE DROP (color + shake + fireworks handled by engine) ----
+  // ---- final chorus (still black & white — the grief holds) ----
   { t: 146.80, d: 3.1, text: "AMERICA" },
   { t: 150.20, d: 2.3, text: "FUCK YEAH!" },
   { t: 152.80, d: 3.1, text: "AMERICA" },
@@ -156,8 +167,58 @@ const PHOTOS = [
   ["img/thanksgiving.jpg",  "PORTION CONTROL"],
 ];
 
+/* ------------------------------------------------------------
+   ACT 2 MONTAGE — what has America done in 250 years?
+   Shown in order, evenly spread across the Free Bird solo.
+   ------------------------------------------------------------ */
+const MONTAGE = [
+  { year: "1776 – 2026", title: "WHAT HAS AMERICA DONE?" },   // title card
+  { img: "img/declaration.jpg",  year: "1776", title: "DECLARED INDEPENDENCE" },
+  { img: "img/constitution.jpg", year: "1787", title: "WROTE THE RULEBOOK FOR FREEDOM" },
+  { img: "img/lincoln.jpg",      year: "1865", title: "ENDED SLAVERY" },
+  { img: "img/goldenspike.jpg",  year: "1869", title: "CONNECTED THE COASTS" },
+  { img: "img/oldfaithful.jpg",  year: "1872", title: "INVENTED THE NATIONAL PARK" },
+  { img: "img/liberty.jpg",      year: "1886", title: "LIFTED THE TORCH" },
+  { img: "img/ellis.jpg",        year: "1892", title: "WELCOMED THE WORLD" },
+  { img: "img/wrightflyer.jpg",  year: "1903", title: "TAUGHT HUMANITY TO FLY" },
+  { img: "img/modelt.jpg",       year: "1913", title: "PUT THE PLANET ON WHEELS" },
+  { img: "img/suffrage.jpg",     year: "1920", title: "WOMEN WON THE VOTE" },
+  { img: "img/armstrong.jpg",    year: "1926", title: "GAVE THE WORLD JAZZ" },
+  { img: "img/goldengate.jpg",   year: "1937", title: "BUILT THE IMPOSSIBLE" },
+  { img: "img/dday.jpg",         year: "1944", title: "LIBERATED A CONTINENT" },
+  { img: "img/vjday.jpg",        year: "1945", title: "CAME HOME" },
+  { img: "img/eniac.jpg",        year: "1946", title: "BUILT THE FIRST COMPUTER" },
+  { img: "img/jackie.jpg",       year: "1947", title: "BROKE THE COLOR BARRIER" },
+  { img: "img/airlift.jpg",      year: "1948", title: "FED BERLIN FROM THE SKY" },
+  { img: "img/salk.jpg",         year: "1955", title: "BEAT POLIO" },
+  { img: "img/elvis.jpg",        year: "1956", title: "INVENTED ROCK AND ROLL" },
+  { img: "img/mlk.jpg",          year: "1963", title: "HAD A DREAM" },
+  { img: "img/earthrise.jpg",    year: "1968", title: "SAW OURSELVES FROM THE MOON" },
+  { img: "img/moon.jpg",         year: "1969", title: "WALKED ON IT" },
+  { img: "img/arpanet.png",      year: "1969", title: "INVENTED THE INTERNET" },
+  { img: "img/chip.jpg",         year: "1971", title: "PUT A COMPUTER ON A CHIP" },
+  { img: "img/lunarrover.jpg",   year: "1971", title: "BROUGHT A CAR TO THE MOON" },
+  { img: "img/goldenrecord.jpg", year: "1977", title: "SENT A MIXTAPE TO THE STARS" },
+  { img: "img/shuttle.jpg",      year: "1981", title: "GAVE THE SPACESHIP WINGS" },
+  { img: "img/reaganwall.jpg",   year: "1987", title: "“TEAR DOWN THIS WALL”" },
+  { img: "img/desertstorm.jpg",  year: "1991", title: "LIBERATED KUWAIT" },
+  { img: "img/hubble.jpg",       year: "1995", title: "STARED INTO CREATION" },
+  { img: "img/iss.jpg",          year: "1998", title: "STARTED BUILDING A HOUSE IN SPACE" },
+  { img: "img/groundzero.jpg",   year: "2001", title: "GOT KNOCKED DOWN. GOT BACK UP." },
+  { img: "img/iraq.jpg",         year: "2003", title: "EXPORTED FREEDOM (REVIEWS MIXED)" },
+  { img: "img/genome.jpg",       year: "2003", title: "READ OUR OWN SOURCE CODE" },
+  { img: "img/iphone.jpg",       year: "2007", title: "PUT THE INTERNET IN EVERY POCKET" },
+  { img: "img/obama.jpg",        year: "2008", title: "FIRST BLACK PRESIDENT" },
+  { img: "img/marsrover.jpg",    year: "2012", title: "DROVE ON MARS" },
+  { img: "img/falcon.jpg",       year: "2015", title: "TAUGHT ROCKETS TO LAND THEMSELVES" },
+  { img: "img/fireworks.jpg",    year: "2026", title: "250 YEARS. HERE'S TO 250 MORE." },
+];
+
 /* ---------- elements ---------- */
 const audio       = document.getElementById("anthem");
+const audio2      = document.getElementById("anthem2");
+const montageEl   = document.getElementById("montage");
+const kiloEl      = document.getElementById("kilo");
 const flash       = document.getElementById("flash");
 const bwEl        = document.getElementById("bw");
 const hero        = document.querySelector(".hero");
@@ -188,27 +249,35 @@ let nextEvt = 0;
 
 /* ---------- start ---------- */
 let started = false;
+let act = 1;
 
-function startShow(at = 0) {
+function startShow(at = 0, whichAct = 1) {
   if (started) return;
   started = true;
-  audio.currentTime = at;
-  nextEvt = EVENTS.findIndex(e => e.t >= at);
-  if (nextEvt === -1) nextEvt = EVENTS.length;
-  audio.play();
+  // warm the cache — at 1.5 beats per slide there's no time to fetch
+  for (const s of MONTAGE) if (s.img) { const i = new Image(); i.src = s.img; }
   hero.classList.add("playing");
   if (!reducedMotion) {
     startBullets();
     startFireworks();
-    startPhotos();
     startFlyers();
+    if (whichAct === 1) startPhotos();
+  }
+  if (whichAct === 1) {
+    audio.currentTime = at;
+    nextEvt = EVENTS.findIndex(e => e.t >= at);
+    if (nextEvt === -1) nextEvt = EVENTS.length;
+    audio.play();
+  } else {
+    enterActTwo();
   }
   requestAnimationFrame(tick);
 }
 
 startBtn.addEventListener("click", () => startShow(0));
 for (const chip of document.querySelectorAll(".chip")) {
-  chip.addEventListener("click", () => startShow(parseFloat(chip.dataset.t)));
+  chip.addEventListener("click", () =>
+    chip.dataset.act === "2" ? startShow(0, 2) : startShow(parseFloat(chip.dataset.t)));
 }
 
 // the repo ships without the (copyrighted) anthem — tell visitors what to do
@@ -217,67 +286,90 @@ audio.addEventListener("error", () => {
     "⚠ ANTHEM MISSING — put your own copy of the song next to index.html, named america-fk-yeah.mp3";
 });
 
-/* ---------- main loop ---------- */
+/* ---------- main loop (both acts) ---------- */
 const FLASH_COLORS = ["#B22234", "#ffffff", "#3C3B6E"];
 let lastBeat = -1;
 let inSadPart = false;
-let dropped = false;
+let dropped2 = false;
+let redropped2 = false;
+let kiloFired = false;
 
 function tick() {
-  const t = audio.currentTime;
+  const a = act === 1 ? audio : audio2;
+  const beat = act === 1 ? BEAT : BEAT2;
+  const beatOffset = act === 1 ? BEAT_OFFSET : BEAT_OFFSET2;
+  const t = a.currentTime;
 
-  // sad part: fade to black & white, no flashing — let the nation grieve
-  if (!inSadPart && t >= SLOW_START + GLOBAL_OFFSET && t < DROP + GLOBAL_OFFSET) {
-    inSadPart = true;
-    bwEl.classList.add("on");
-    flash.style.opacity = 0;
+  if (act === 1) {
+    // sad ending: fade to black & white, no flashing — let the nation grieve
+    // all the way out. Free Bird brings the color back.
+    if (!inSadPart && t >= SLOW_START + GLOBAL_OFFSET) {
+      inSadPart = true;
+      bwEl.classList.add("on");
+      flash.style.opacity = 0;
+    }
   }
 
-  // THE DROP: color snaps back, screen shake, fireworks everywhere
-  if (!dropped && t >= DROP + GLOBAL_OFFSET) {
-    dropped = true;
-    inSadPart = false;
-    bwEl.classList.remove("on");
-    bigShake();
-    for (let i = 0; i < 16; i++) setTimeout(launchFirework, i * 140);
-    jetSquadron();
-  }
-
-  // beat-locked tricolor flash (paused during the sad part)
-  if (!reducedMotion && !audio.paused && !inSadPart) {
-    const beatPos = (t - BEAT_OFFSET) / BEAT;
+  // beat-locked tricolor flash (85bpm in act 1, 142bpm in act 2;
+  // paused during the sad part)
+  if (!reducedMotion && !a.paused && !inSadPart) {
+    const beatPos = (t - beatOffset) / beat;
     const beatIdx = Math.floor(beatPos);
     if (beatIdx !== lastBeat && beatIdx >= 0) {
       lastBeat = beatIdx;
       flash.style.background = FLASH_COLORS[beatIdx % 3];
-      if (dropped) {
-        launchFirework();               // finale: firework on EVERY beat
-        beatShake();
+      if (act === 2) {
+        if (beatIdx % 4 === 0) launchFirework();
       } else if (beatIdx % 8 === 0) {
         launchFirework();
       }
     }
     const intoBeat = beatPos - Math.floor(beatPos);
-    flash.style.opacity = Math.max(0, (dropped ? 0.65 : 0.5) * (1 - intoBeat * 2.2));
+    const peak = act === 2 ? 0.42 : 0.5;
+    flash.style.opacity = Math.max(0, peak * (1 - intoBeat * 2.2));
   }
 
-  // fire events (skip any we're way past, e.g. after seeking)
-  while (nextEvt < EVENTS.length && t >= EVENTS[nextEvt].t) {
-    if (t - EVENTS[nextEvt].t < 1.5) fireEvent(EVENTS[nextEvt]);
-    nextEvt++;
-  }
-  // rewind support (HUD seeking)
-  if (nextEvt > 0 && t < EVENTS[nextEvt - 1].t) {
-    nextEvt = EVENTS.findIndex(e => e.t > t);
-    if (nextEvt === -1) nextEvt = EVENTS.length;
-    clearLyric();
-    if (t < SLOW_START + GLOBAL_OFFSET) { inSadPart = false; dropped = false; bwEl.classList.remove("on"); }
+  if (act === 1) {
+    // fire events (skip any we're way past, e.g. after seeking)
+    while (nextEvt < EVENTS.length && t >= EVENTS[nextEvt].t) {
+      if (t - EVENTS[nextEvt].t < 1.5) fireEvent(EVENTS[nextEvt]);
+      nextEvt++;
+    }
+    // rewind support (HUD seeking)
+    if (nextEvt > 0 && t < EVENTS[nextEvt - 1].t) {
+      nextEvt = EVENTS.findIndex(e => e.t > t);
+      if (nextEvt === -1) nextEvt = EVENTS.length;
+      clearLyric();
+      if (t < SLOW_START + GLOBAL_OFFSET) { inSadPart = false; bwEl.classList.remove("on"); }
+    }
+  } else {
+    // act 2: montage cuts on the beat — 6 beats/slide until the bass drops,
+    // then 3 beats/slide. Deck loops (skipping the title card) so the cuts
+    // never stop until the song does.
+    const preDur = PRE_BEATS * BEAT2;
+    const postDur = POST_BEATS * BEAT2;
+    const n = t < DROP2
+      ? Math.floor(t / preDur)
+      : Math.floor(DROP2 / preDur) + Math.floor((t - DROP2) / postDur);
+    const idx = n < MONTAGE.length ? n : 1 + ((n - MONTAGE.length) % (MONTAGE.length - 1));
+    showSlide(idx, t < DROP2 ? preDur : postDur);
+
+    // hit the drops hard
+    if (!dropped2 && t >= DROP2) { dropped2 = true; bigShake(); for (let i = 0; i < 8; i++) setTimeout(launchFirework, i * 120); }
+    if (!redropped2 && t >= REDROP2) { redropped2 = true; bigShake(); jetSquadron(); for (let i = 0; i < 8; i++) setTimeout(launchFirework, i * 120); }
+
+    // the imperial rage interlude
+    const inKilo = t >= KILO_START && t < KILO_END;
+    kiloEl.hidden = !inKilo;
+    montageEl.style.visibility = inKilo ? "hidden" : "visible";
+    if (inKilo && !kiloFired) { kiloFired = true; bigShake(); }
   }
 
   if (hudOpen) hudTime.textContent = t.toFixed(2);
 
-  if (!audio.ended) requestAnimationFrame(tick);
-  else finale();
+  if (!a.ended) requestAnimationFrame(tick);
+  else if (act === 1) act1Finale();
+  else grandFinale();
 }
 
 function fireEvent(evt) {
@@ -330,10 +422,11 @@ function beatShake() {
   rootEl.classList.add("shake-beat");
 }
 
-/* ---------- satire polaroids ---------- */
+/* ---------- satire polaroids (act 1 only) ---------- */
 let photoBag = [];
+let photoTimer = null;
 function startPhotos() {
-  setInterval(() => {
+  photoTimer = setInterval(() => {
     if (audio.paused || audio.ended) return;
     if (photoLayer.childElementCount >= 5) return;
     if (photoBag.length === 0) photoBag = [...PHOTOS].sort(() => Math.random() - 0.5);
@@ -391,17 +484,69 @@ function startFlyers() {
   }, 3800);
 }
 
-/* ---------- finale ---------- */
-function finale() {
-  clearLyric();
+/* ---------- act transition + finales ---------- */
+function chorusPop(text, secs, small = false) {
   const el = document.createElement("div");
-  el.className = "chorus";
-  el.textContent = "HAPPY 250TH 🎂";
-  el.style.animationDuration = "3s";
+  el.className = "chorus" + (small ? " chorus-small" : "");
+  el.textContent = text;
+  el.style.animationDuration = secs + "s";
   chorusZone.appendChild(el);
+  setTimeout(() => el.remove(), secs * 1000 + 200);
+}
+
+// act 1 ends → birthday pop, then Free Bird carries us home
+function act1Finale() {
+  clearLyric();
+  fyEl.hidden = true;
   flash.style.opacity = 0;
-  for (let i = 0; i < 12; i++) setTimeout(launchFirework, i * 250);
-  setTimeout(() => { document.getElementById("replay").hidden = false; }, 2800);
+  chorusPop("HAPPY 250TH 🎂", 3);
+  for (let i = 0; i < 10; i++) setTimeout(launchFirework, i * 250);
+  setTimeout(() => {
+    enterActTwo();
+    requestAnimationFrame(tick);
+  }, 3000);
+}
+
+function enterActTwo() {
+  act = 2;
+  lastBeat = -1;
+  inSadPart = false;
+  clearInterval(photoTimer);          // satire's over — history time
+  photoLayer.innerHTML = "";
+  bwEl.classList.remove("on");
+  clearLyric();
+  document.body.classList.add("act2");
+  if (audio2.error) { grandFinale(); return; }   // no Free Bird file → wrap it up
+  audio2.currentTime = 0;
+  audio2.play().catch(() => grandFinale());
+}
+
+/* ---------- act 2 montage rendering ---------- */
+let currentSlide = -1;
+function showSlide(idx, slideDur) {
+  if (idx === currentSlide) return;
+  currentSlide = idx;
+  const { img, year, title } = MONTAGE[idx];
+  for (const old of montageEl.children) {
+    old.classList.add("out");
+    setTimeout(() => old.remove(), 240);
+  }
+  const el = document.createElement("div");
+  el.className = "slide" + (img ? "" : " title-card");
+  el.innerHTML =
+    (img ? `<img src="${img}" alt="" style="animation-duration:${slideDur + 1}s">` : "") +
+    `<div class="m-year">${year}</div>` +
+    `<div class="m-title">${title}</div>`;
+  montageEl.appendChild(el);
+}
+
+// the end of the whole show
+function grandFinale() {
+  flash.style.opacity = 0;
+  chorusPop("HERE'S TO 250 MORE 🦅", 3.5, true);
+  for (let i = 0; i < 14; i++) setTimeout(launchFirework, i * 220);
+  jetSquadron();
+  setTimeout(() => { document.getElementById("replay").hidden = false; }, 3000);
 }
 document.getElementById("replay").addEventListener("click", () => location.reload());
 
@@ -471,9 +616,10 @@ function startFireworks() {
   })();
 }
 
-/* ---------- calibration HUD (press C) ---------- */
+/* ---------- calibration HUD (press C) — drives whichever act is playing ---------- */
 let hudOpen = false;
 addEventListener("keydown", (e) => {
+  const a = act === 1 ? audio : audio2;
   const key = e.key.toLowerCase();
   if (key === "c") {
     hudOpen = !hudOpen;
@@ -481,14 +627,14 @@ addEventListener("keydown", (e) => {
   }
   if (!hudOpen) return;
   if (key === "l") {
-    const stamp = "t = " + audio.currentTime.toFixed(2);
+    const stamp = `act ${act}, t = ` + a.currentTime.toFixed(2);
     console.log(stamp);
     hudLog.textContent = stamp + "\n" + hudLog.textContent;
   }
-  if (e.key === "ArrowLeft")  audio.currentTime = Math.max(0, audio.currentTime - 2);
-  if (e.key === "ArrowRight") audio.currentTime += 2;
+  if (e.key === "ArrowLeft")  a.currentTime = Math.max(0, a.currentTime - 2);
+  if (e.key === "ArrowRight") a.currentTime += 2;
   if (e.key === " ") {
     e.preventDefault();
-    audio.paused ? audio.play() : audio.pause();
+    a.paused ? a.play() : a.pause();
   }
 });
