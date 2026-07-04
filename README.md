@@ -15,7 +15,17 @@ Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM** butt
 - **Lyrics** cycle at the bottom of the screen, every word colored
   white → red → blue in turn.
 - **Both item lists** (McDonald's → Slavery, Starbucks → Books) appear as giant
-  center-stage tricolor call-outs with emoji — same style for both.
+  center-stage tricolor call-outs with emoji — and every crowd **"FUCK YEAH!"**
+  response slams in below them in gold, at its exact transcribed timestamp.
+- **Satire stock photos** pop up as tilted polaroids with deadpan captions
+  ("HEALTH FOOD", "THE MOON (OURS)", "AMERICA'S FIRST UBER"…). All images are
+  public-domain / freely-licensed photos pulled from Wikimedia Commons into `img/`.
+- **Eagles and fighter jets** cruise across the screen; jets sometimes fly in a
+  three-ship formation with contrails.
+- **The sad slow part** (~101s) drains the screen to black & white and stops the
+  flashing. When the music kicks back in at **146.8s**: color snaps back, the
+  screen shakes, a 16-firework barrage goes off, a jet squadron scrambles, and
+  fireworks launch on every beat until the end.
 
 ## How the sync works
 
