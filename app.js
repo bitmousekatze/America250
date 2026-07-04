@@ -1,120 +1,103 @@
 /* ============================================================
-   AMERICA 250 — beat engine, bullet rain, lyrics, item cues
+   AMERICA 250 — beat engine, bullet rain, synced lyrics
    ============================================================
 
-   TIMING — everything you'd ever tune is in this block:
+   TIMING — every timestamp below was extracted from Joel's
+   actual mp3 with whisper.cpp (word-level transcription), so
+   the sync is exact for this specific file. If you ever swap
+   in a different rip of the song, re-run the transcription or
+   nudge GLOBAL_OFFSET.
 
    • BPM / BEAT_OFFSET drive the red/white/blue flash.
-   • LIST1_START — when he shouts "McDonald's!"  (47s, per Joel)
-   • LIST2_START — when he shouts "Starbucks!"   (ESTIMATE)
-
-   LIVE TAP-SYNC (no code editing needed): while the song plays,
-   press  M  the instant he says "McDonald's", or  S  the instant
-   he says "Starbucks". The list snaps to that moment and the
-   setting is saved in your browser (localStorage) forever.
-
-   Items and lyric lines are spaced on the 85bpm beat grid
-   (1 beat = 0.7059s).
+   • GLOBAL_OFFSET shifts EVERY lyric/item cue at once (seconds,
+     positive = later). Use the HUD (press C) to check drift.
    ============================================================ */
 
 const BPM = 85;
 const BEAT = 60 / BPM;            // 0.70588s
 const BEAT_OFFSET = 0.0;          // time of first downbeat
-
-let LIST1_START = parseFloat(localStorage.getItem("a250.list1")) || 47.0;
-let LIST2_START = parseFloat(localStorage.getItem("a250.list2")) || 110.0;
-
-const TAP_LATENCY = 0.12;         // subtracted from tap-sync to cover reaction time
-
-// List 1 → rubber-stamp cards.  [beats after list start, label, emoji, flag]
-const LIST1 = [
-  [0,  "McDonald's",    "🍔"],
-  [2,  "Wal-Mart",      "🛒"],
-  [4,  "The Gap",       "👖"],
-  [6,  "Baseball",      "⚾"],
-  [8,  "The NFL",       "🏈"],
-  [10, "Rock and Roll", "🎸"],
-  [12, "The Internet",  "💻"],
-  [14, "Slavery",       "⛓️", "awkward"],   // the song gets weird here too
-];
-
-// List 2 → tricolor lyric call-outs (no stamp animation).
-// Flip LIST2_AS_STAMPS to true if you ever want the cards back.
-const LIST2_AS_STAMPS = false;
-const LIST2 = [
-  [0,  "Starbucks",          "☕"],
-  [2,  "Disney World",       "🏰"],
-  [4,  "Porno",              "🔞"],
-  [5,  "Valium",             "💊"],
-  [6,  "Reeboks",            "👟"],
-  [7,  "Fake Tits",          "🎈🎈"],
-  [8,  "Sushi",              "🍣"],
-  [9,  "Taco Bell",          "🌮"],
-  [10, "Rodeos",             "🤠"],
-  [11, "Bed Bath & Beyond",  "🛁"],
-  [14, "Liberty",            "🗽"],
-  [15, "Wax Lips",           "👄"],
-  [16, "The Alamo",          "🧱"],
-  [17, "Band-Aids",          "🩹"],
-  [18, "Las Vegas",          "🎰"],
-  [19, "Christmas",          "🎄"],
-  [20, "Immigrants",         "🌍"],
-  [21, "Popeye",             "💪"],
-  [22, "Democrats",          "🫏"],
-  [23, "Republicans",        "🐘"],
-  [26, "Sportsmanship",      "🤝"],
-  [28, "Books",              "📚"],
-];
+const GLOBAL_OFFSET = 0.0;        // shift all cues at once
 
 /* ------------------------------------------------------------
-   LYRICS — cycling lines, words colored white/red/blue in turn.
-   { t: seconds, d: seconds shown, text }
-   Times are ESTIMATES — use the HUD (press C, then L) to tune.
-   Lines with text: "" are skipped: those are the verse lines,
-   left blank so the repo doesn't ship the full copyrighted
-   lyrics — paste them in from your favorite lyrics site.
+   TIMELINE — one entry per lyric line / item call-out.
+   { t: start (s), d: seconds shown, text }
+   item: true → giant center-stage call-out (both lists now
+   use this same style).
    ------------------------------------------------------------ */
-const LYRICS = [
-  { t: 1.0,  d: 5.5, text: "America… America…" },
-  { t: 8.0,  d: 1.4, text: "AMERICA" },
-  { t: 9.4,  d: 1.8, text: "FUCK YEAH!" },
-  { t: 11.5, d: 3.4, text: "Comin' again to save the motherfuckin' day yeah" },
-  { t: 15.2, d: 1.4, text: "AMERICA" },
-  { t: 16.6, d: 1.8, text: "FUCK YEAH!" },
-  { t: 18.6, d: 3.0, text: "Freedom is the only way yeah" },
-  { t: 22.0, d: 3.2, text: "" },   // paste: the "terrorists" line
-  { t: 25.4, d: 3.0, text: "" },   // paste: the "answer to" line
-  { t: 28.6, d: 1.4, text: "AMERICA" },
-  { t: 30.0, d: 1.8, text: "FUCK YEAH!" },
-  { t: 32.2, d: 3.4, text: "" },   // paste: the "so lick my…" line
-  { t: 35.8, d: 1.4, text: "AMERICA" },
-  { t: 37.2, d: 1.8, text: "FUCK YEAH!" },
-  { t: 39.4, d: 3.4, text: "" },   // paste: the "whatcha gonna do…" line
-  { t: 43.0, d: 1.8, text: "" },   // paste: the "dream that we all share" line
-  { t: 44.9, d: 1.9, text: "" },   // paste: the "hope for tomorrow" line
-  //             ---- list 1 stamps own the screen 47–58s ----
-  { t: 58.5, d: 1.6, text: "FUCK YEAH!" },
-  { t: 61.0, d: 1.4, text: "AMERICA" },
-  { t: 62.4, d: 1.8, text: "FUCK YEAH!" },
-  { t: 64.5, d: 3.4, text: "Comin' again to save the motherfuckin' day yeah" },
-  { t: 68.2, d: 1.4, text: "AMERICA" },
-  { t: 69.6, d: 1.8, text: "FUCK YEAH!" },
-  { t: 71.6, d: 3.0, text: "Freedom is the only way yeah" },
-  { t: 75.0, d: 3.2, text: "" },   // paste: verse line
-  { t: 78.4, d: 3.0, text: "" },   // paste: verse line
-  { t: 81.6, d: 1.4, text: "AMERICA" },
-  { t: 83.0, d: 1.8, text: "FUCK YEAH!" },
-  { t: 85.2, d: 3.4, text: "" },   // paste: verse line
-  { t: 88.8, d: 1.4, text: "AMERICA" },
-  { t: 90.2, d: 1.8, text: "FUCK YEAH!" },
-  { t: 92.5, d: 3.8, text: "" },   // paste: bridge line (the slow bit)
-  { t: 96.5, d: 3.8, text: "" },   // paste: bridge line
-  { t: 101.0, d: 2.0, text: "FUCK YEAH!" },
-  //             ---- list 2 call-outs own the screen ----
-];
+const TIMELINE = [
+  { t: 0.96,  d: 2.8, text: "America…" },
+  { t: 4.18,  d: 2.8, text: "America…" },
+  { t: 7.93,  d: 1.0, text: "AMERICA" },
+  { t: 9.03,  d: 1.6, text: "FUCK YEAH!" },
+  { t: 10.83, d: 2.9, text: "Comin' again to save the motherfuckin' day, yeah" },
+  { t: 13.89, d: 0.9, text: "AMERICA" },
+  { t: 14.87, d: 1.5, text: "FUCK YEAH!" },
+  { t: 16.55, d: 2.8, text: "Freedom is the only way, yeah" },
+  { t: 19.53, d: 2.4, text: "Terrorists, your game is through" },
+  { t: 22.07, d: 2.7, text: "'Cause now you have to answer to" },
+  { t: 25.00, d: 0.9, text: "AMERICA" },
+  { t: 26.03, d: 1.5, text: "FUCK YEAH!" },
+  { t: 27.70, d: 2.7, text: "So lick my butt and suck on my balls" },
+  { t: 30.62, d: 0.9, text: "AMERICA" },
+  { t: 31.70, d: 1.4, text: "FUCK YEAH!" },
+  { t: 33.20, d: 3.4, text: "Whatcha gonna do when we come for you now?" },
+  { t: 37.20, d: 2.5, text: "It's the dream that we all share" },
+  { t: 39.90, d: 2.9, text: "It's the hope for tomorrow" },
+  { t: 43.20, d: 2.2, text: "FUCK YEAH!" },
 
-// outro chant, placed relative to the end of list 2 so tap-sync moves it too
-const OUTRO_YEAHS = 6;
+  // ---- list 1 ----
+  { t: 47.30, d: 1.4, text: "McDonald's 🍔",    item: true },
+  { t: 48.90, d: 1.2, text: "Wal-Mart 🛒",      item: true },
+  { t: 50.20, d: 1.3, text: "The Gap 👖",       item: true },
+  { t: 51.70, d: 1.3, text: "Baseball ⚾",      item: true },
+  { t: 53.20, d: 1.2, text: "The NFL 🏈",       item: true },
+  { t: 54.60, d: 1.1, text: "Rock and Roll 🎸", item: true },
+  { t: 55.90, d: 1.3, text: "The Internet 💻",  item: true },
+  { t: 57.46, d: 1.3, text: "Slavery ⛓️",       item: true },
+  { t: 60.10, d: 1.8, text: "FUCK YEAH!" },
+
+  // ---- list 2 ----
+  { t: 67.10, d: 1.3, text: "Starbucks ☕",          item: true },
+  { t: 68.60, d: 1.3, text: "Disney World 🏰",       item: true },
+  { t: 70.10, d: 1.2, text: "Porno 🔞",              item: true },
+  { t: 71.50, d: 1.2, text: "Valium 💊",             item: true },
+  { t: 72.90, d: 1.2, text: "Reeboks 👟",            item: true },
+  { t: 74.30, d: 1.2, text: "Fake Tits 🎈🎈",        item: true },
+  { t: 75.70, d: 1.2, text: "Sushi 🍣",              item: true },
+  { t: 77.10, d: 1.2, text: "Taco Bell 🌮",          item: true },
+  { t: 78.50, d: 1.1, text: "Rodeos 🤠",             item: true },
+  { t: 79.80, d: 1.1, text: "Bed Bath & Beyond 🛁",  item: true },
+  { t: 81.10, d: 1.6, text: "FUCK YEAH! FUCK YEAH!" },
+  { t: 84.20, d: 1.2, text: "Liberty 🗽",            item: true },
+  { t: 85.60, d: 1.4, text: "Wax Lips 👄",           item: true },
+  { t: 87.23, d: 1.0, text: "The Alamo 🧱",          item: true },
+  { t: 88.40, d: 1.3, text: "Band-Aids 🩹",          item: true },
+  { t: 89.90, d: 1.2, text: "Las Vegas 🎰",          item: true },
+  { t: 91.30, d: 1.2, text: "Christmas 🎄",          item: true },
+  { t: 92.70, d: 1.2, text: "Immigrants 🌍",         item: true },
+  { t: 94.10, d: 1.2, text: "Popeye 💪",             item: true },
+  { t: 95.50, d: 1.2, text: "Democrats 🫏",          item: true },
+  { t: 96.90, d: 1.3, text: "Republicans 🐘",        item: true },
+  { t: 98.40, d: 1.1, text: "Sportsmanship 🤝",      item: true },
+  { t: 99.70, d: 1.6, text: "Books 📚",              item: true },
+
+  // ---- instrumental ----
+  { t: 102.5, d: 9.0, text: "🎸 GUITAR SOLO OF FREEDOM 🎸" },
+
+  // ---- big slow finale ----
+  { t: 112.94, d: 4.0, text: "AMERICA…" },
+  { t: 117.50, d: 1.0, text: "FUCK YEAH!" },
+  { t: 118.60, d: 5.5, text: "Comin' again to save the motherfuckin' day, yeah" },
+  { t: 124.51, d: 1.5, text: "AMERICA" },
+  { t: 126.20, d: 3.3, text: "FUCK YEAH!" },
+  { t: 129.90, d: 5.4, text: "Freedom is the only way, yeah" },
+  { t: 135.60, d: 4.9, text: "Terrorists, your game is through" },
+  { t: 140.92, d: 5.5, text: "'Cause now you have to answer to…" },
+  { t: 146.80, d: 3.1, text: "AMERICA" },
+  { t: 150.20, d: 2.3, text: "FUCK YEAH!" },
+  { t: 152.80, d: 3.1, text: "AMERICA" },
+  { t: 156.20, d: 4.5, text: "FUCK YEAH!" },
+];
 
 /* ---------- elements ---------- */
 const audio       = document.getElementById("anthem");
@@ -122,10 +105,8 @@ const flash       = document.getElementById("flash");
 const hero        = document.querySelector(".hero");
 const startBtn    = document.getElementById("start");
 const bulletLayer = document.getElementById("bullets");
-const stampZone   = document.getElementById("stamp-zone");
 const chorusZone  = document.getElementById("chorus-zone");
 const lyricsEl    = document.getElementById("lyrics");
-const toastEl     = document.getElementById("toast");
 const hud         = document.getElementById("hud");
 const hudTime     = hud.querySelector(".hud-time");
 const hudLog      = hud.querySelector(".hud-log");
@@ -137,41 +118,11 @@ for (const line of document.querySelectorAll(".flagline")) {
   line.textContent = "🇺🇸 ".repeat(80);
 }
 
-/* ---------- event table (stamps + lyric lines, one timeline) ---------- */
-let EVENTS = [];
+/* ---------- event table ---------- */
+const EVENTS = TIMELINE
+  .map(e => ({ ...e, t: e.t + GLOBAL_OFFSET }))
+  .sort((a, b) => a.t - b.t);
 let nextEvt = 0;
-
-function buildEvents() {
-  EVENTS = [];
-
-  for (const { t, d, text } of LYRICS) {
-    if (text) EVENTS.push({ t, d, type: "lyric", text });
-  }
-
-  for (const [b, label, emoji, flag] of LIST1) {
-    EVENTS.push({ t: LIST1_START + b * BEAT, type: "stamp", label, emoji, flag });
-  }
-
-  LIST2.forEach(([b, label, emoji, flag], i) => {
-    const t = LIST2_START + b * BEAT;
-    if (LIST2_AS_STAMPS) {
-      EVENTS.push({ t, type: "stamp", label, emoji, flag });
-    } else {
-      const nextB = i + 1 < LIST2.length ? LIST2[i + 1][0] : b + 2.5;
-      EVENTS.push({ t, d: (nextB - b) * BEAT, type: "lyric", text: `${label} ${emoji}`, item: true });
-    }
-  });
-
-  const outroStart = LIST2_START + (LIST2[LIST2.length - 1][0] + 3) * BEAT;
-  for (let i = 0; i < OUTRO_YEAHS; i++) {
-    EVENTS.push({ t: outroStart + i * 2 * BEAT, d: 1.3, type: "lyric", text: "FUCK YEAH!" });
-  }
-
-  EVENTS.sort((a, b) => a.t - b.t);
-  nextEvt = EVENTS.findIndex(e => e.t > audio.currentTime);
-  if (nextEvt === -1) nextEvt = EVENTS.length;
-}
-buildEvents();
 
 /* ---------- start ---------- */
 startBtn.addEventListener("click", () => {
@@ -207,10 +158,10 @@ function tick() {
 
   // fire events (skip any we're way past, e.g. after seeking)
   while (nextEvt < EVENTS.length && t >= EVENTS[nextEvt].t) {
-    if (t - EVENTS[nextEvt].t < 1.5) fireEvent(EVENTS[nextEvt]);
+    if (t - EVENTS[nextEvt].t < 1.5) showLyricLine(EVENTS[nextEvt]);
     nextEvt++;
   }
-  // rewind support (calibration seeking)
+  // rewind support (HUD seeking)
   if (nextEvt > 0 && t < EVENTS[nextEvt - 1].t) {
     nextEvt = EVENTS.findIndex(e => e.t > t);
     if (nextEvt === -1) nextEvt = EVENTS.length;
@@ -223,12 +174,7 @@ function tick() {
   else finale();
 }
 
-function fireEvent(evt) {
-  if (evt.type === "stamp") showStamp(evt);
-  else showLyricLine(evt);
-}
-
-/* ---------- cycling lyric lines ---------- */
+/* ---------- cycling lyric lines / item call-outs ---------- */
 let lyricTimer = null;
 
 function showLyricLine({ text, d, item }) {
@@ -250,19 +196,6 @@ function clearLyric() {
   lyricsEl.classList.remove("item-line");
 }
 
-/* ---------- item stamps (list 1) ---------- */
-function showStamp({ label, emoji, flag }) {
-  const el = document.createElement("div");
-  el.className = "stamp" + (flag === "awkward" ? " awkward" : "");
-  el.style.setProperty("--tilt", (Math.sin(nextEvt * 7) * 8).toFixed(1) + "deg");
-  el.innerHTML =
-    `<div class="emoji">${emoji}</div>` +
-    `<div class="label">${label}</div>` +
-    `<div class="yeah">${flag === "awkward" ? "...fuck yeah?" : "FUCK YEAH!"}</div>`;
-  stampZone.appendChild(el);
-  setTimeout(() => el.remove(), flag === "awkward" ? 1700 : 1400);
-}
-
 /* ---------- finale ---------- */
 function finale() {
   clearLyric();
@@ -273,30 +206,6 @@ function finale() {
   chorusZone.appendChild(el);
   flash.style.opacity = 0;
   for (let i = 0; i < 12; i++) setTimeout(launchFirework, i * 250);
-}
-
-/* ---------- tap-sync + toast ---------- */
-function toast(msg) {
-  toastEl.hidden = false;
-  toastEl.textContent = msg;
-  // restart the fade animation
-  toastEl.style.animation = "none";
-  void toastEl.offsetWidth;
-  toastEl.style.animation = "";
-}
-
-function syncList(which) {
-  const t = Math.max(0, audio.currentTime - TAP_LATENCY);
-  if (which === 1) {
-    LIST1_START = t;
-    localStorage.setItem("a250.list1", t.toFixed(2));
-    toast(`🍔 LIST 1 SYNCED TO ${t.toFixed(2)}s`);
-  } else {
-    LIST2_START = t;
-    localStorage.setItem("a250.list2", t.toFixed(2));
-    toast(`☕ LIST 2 SYNCED TO ${t.toFixed(2)}s`);
-  }
-  buildEvents();
 }
 
 /* ---------- bullet rain ---------- */
@@ -365,15 +274,10 @@ function startFireworks() {
   })();
 }
 
-/* ---------- keys: tap-sync + calibration HUD ---------- */
+/* ---------- calibration HUD (press C) ---------- */
 let hudOpen = false;
 addEventListener("keydown", (e) => {
   const key = e.key.toLowerCase();
-
-  // tap-sync works any time the song is playing, HUD open or not
-  if (key === "m" && !audio.paused) return syncList(1);
-  if (key === "s" && !audio.paused) return syncList(2);
-
   if (key === "c") {
     hudOpen = !hudOpen;
     hud.hidden = !hudOpen;

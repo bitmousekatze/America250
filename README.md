@@ -12,38 +12,37 @@ Open `index.html` in a browser and press the big gold **PRESS FOR FREEDOM** butt
 
 ## What's on screen
 
-- **List 1** (McDonald's → Slavery) gets rubber-stamp cards.
-- **List 2** (Starbucks → Books) gets giant tricolor lyric call-outs — no stamp
-  animation. (Set `LIST2_AS_STAMPS = true` in `app.js` to bring the cards back.)
 - **Lyrics** cycle at the bottom of the screen, every word colored
-  white → red → blue in turn. The verse lines ship **blank on purpose** — the full
-  copyrighted lyrics shouldn't live in the repo. Each blank slot in the `LYRICS`
-  array in `app.js` has a comment saying which line goes there; paste them in from
-  your favorite lyrics site.
+  white → red → blue in turn.
+- **Both item lists** (McDonald's → Slavery, Starbucks → Books) appear as giant
+  center-stage tricolor call-outs with emoji — same style for both.
 
-## Syncing the timing (the easy way)
+## How the sync works
 
-While the song plays, just tap:
+Every timestamp in the `TIMELINE` array in `app.js` was extracted from this exact
+mp3 using [whisper.cpp](https://github.com/ggml-org/whisper.cpp) with word-level
+transcription — no guessing. Fun facts learned from the transcript: list 1 hits at
+**47.3s**, list 2 at **67.1s** (right after it), there's a guitar solo ~100–112s,
+and the slow finale chorus runs from ~113s to the end.
 
-- **M** — the instant he shouts *"McDonald's!"* → list 1 snaps to that moment
-- **S** — the instant he shouts *"Starbucks!"* → list 2 (and the outro chant) snap to that moment
+If you ever swap in a different rip of the song, nudge `GLOBAL_OFFSET` at the top
+of `app.js` (shifts every cue at once) or re-transcribe:
 
-Both are saved in your browser (localStorage), so you only ever do it once.
-`LIST2_START` starts out as an estimate (110s), so give **S** one tap on your
-first playthrough.
+```
+ffmpeg -i song.mp3 -ar 16000 -ac 1 song.wav
+whisper-cli -m ggml-small.en.bin -f song.wav --max-len 1 --split-on-word -oj
+```
 
-## Fine-tuning (the nerd way)
+## Fine-tuning
 
-All timing lives at the top of `app.js`: `BPM` / `BEAT_OFFSET` drive the tricolor
-flash; items and lyric lines sit on the 85 BPM beat grid. While the song plays:
+While the song plays:
 
 - **C** — toggle the timecode HUD
 - **L** — log the current timestamp (on screen + console)
 - **← / →** — seek 2 seconds
 - **Space** — pause/play
 
-Log timestamps with **L** and paste them into the `LYRICS` array to tighten up
-any line.
+Log timestamps with **L** and tweak any line in the `TIMELINE` array.
 
 ## Warning
 
